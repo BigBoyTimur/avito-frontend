@@ -1,17 +1,25 @@
 import { Card, CardBody, CardHeader, Image, Spinner } from "@nextui-org/react"
-import { useGetAdvertismentsQuery } from "../../app/services/advertisementsApi"
+import { useGetAdvertismentsQuery, useLazyGetAdvertismentsQuery } from "../../app/services/advertisementsApi"
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
 
 type Props = {
   perPage: number
   page: number
+  setPage: (page: number) => void
 }
 
-function AdvertismentsList({ perPage, page }: Props) {
+function AdvertismentsList({ perPage, page, setPage }: Props) {
   const { data, isSuccess, isError } = useGetAdvertismentsQuery({perPage: perPage, page: page})
+  const [ triggerGetAdvertismentsQuery ] = useLazyGetAdvertismentsQuery()
   
-  console.log(data)
+  const handlePageChange = (page: number | null) => {
+    if (page === null) {
+      return;
+    }
+    setPage(page)
+    triggerGetAdvertismentsQuery({perPage: perPage, page: page})
+  }
 
   if (isError) {
     return <div>Возникла ошибка</div>
@@ -31,7 +39,7 @@ function AdvertismentsList({ perPage, page }: Props) {
               {advertisment.imageUrl ? <Image
                 alt="Card background"
                 className="object-cover rounded-xl"
-                src="https://nextui.org/images/hero-card-complete.jpeg"
+                src={advertisment.imageUrl}
                 width={270}
                 height={270}
               /> : <div className="w-[270px] h-[270px] flex items-center justify-center">Нет картинки</div>}
@@ -40,7 +48,7 @@ function AdvertismentsList({ perPage, page }: Props) {
       ))}
     </div>
       <div className="flex items-center justify-center">
-        <FaAngleLeft /><span>{page}</span><FaAngleRight />
+        <FaAngleLeft className={`${data.prev ? 'fill-blue-400 cursor-pointer' : 'fill-gray-700'}`} onClick={() => handlePageChange(data.prev)}/><span>{page}</span><FaAngleRight className={`${data.next ? 'fill-blue-400 cursor-pointer' : 'fill-gray-700'}` } onClick={() => handlePageChange(data.next)} />
       </div>
     </div> : <div className="flex justify-center"><Spinner /></div>
   )
