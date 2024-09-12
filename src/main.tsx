@@ -6,6 +6,9 @@ import Layout from "./components/layout";
 import Advertisments from "./pages/advertisements";
 import Orders from "./pages/orders";
 import Advertisment from "./pages/adverisment";
+import { NextUIProvider } from "@nextui-org/react";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +33,12 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <NextUIProvider>
+      <Provider store={store}>
+        <main className="dark text-foreground bg-background min-h-screen">
+          <RouterProvider router={router} />        
+        </main>
+      </Provider>
+    </NextUIProvider>
   </StrictMode>
 );
