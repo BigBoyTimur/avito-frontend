@@ -17,6 +17,16 @@ type Advertisment = {
   imageUrl?: string;
 };
 
+type AdvertismentPage = {
+  first: number | null;
+  prev: number | null;
+  next: number | null;
+  last: number | null;
+  pages: number | null;
+  items: number | null;
+  data: Advertisment[]
+}
+
 const OrderStatus = {
   Created: 0,
   Paid: 1,
