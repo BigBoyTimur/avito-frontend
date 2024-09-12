@@ -1,7 +1,7 @@
 import { Card, CardBody, CardHeader, Image, Spinner } from "@nextui-org/react"
 import { useGetAdvertismentsQuery, useLazyGetAdvertismentsQuery } from "../../app/services/advertisementsApi"
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 type Props = {
