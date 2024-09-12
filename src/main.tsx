@@ -2,10 +2,10 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Layout from "./components/layout/index.tsx";
+import Layout from "./components/layout";
 import Advertisments from "./pages/advertisements";
-import Orders from "./pages/orders/index.tsx";
-import Advertisment from "./pages/adverisment/index.tsx";
+import Orders from "./pages/orders";
+import Advertisment from "./pages/adverisment";
 
 const router = createBrowserRouter([
   {
