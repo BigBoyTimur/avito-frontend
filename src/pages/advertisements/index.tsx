@@ -8,9 +8,8 @@ function Advertisments() {
 
   return (
     <>
-      <Controls setLimit={ setPerPage } page={page} />
+      <Controls perPage={ perPage } setLimit={ setPerPage } page={page} />
       <AdvertismentsList perPage={perPage} page={page} setPage={setPage} />
-
     </>
   )
 }

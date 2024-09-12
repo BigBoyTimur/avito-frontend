@@ -1,6 +1,7 @@
 import { Card, CardBody, CardHeader, Image, Spinner } from "@nextui-org/react"
 import { useGetAdvertismentsQuery, useLazyGetAdvertismentsQuery } from "../../app/services/advertisementsApi"
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 
 
 type Props = {
@@ -12,7 +13,7 @@ type Props = {
 function AdvertismentsList({ perPage, page, setPage }: Props) {
   const { data, isSuccess, isError } = useGetAdvertismentsQuery({perPage: perPage, page: page})
   const [ triggerGetAdvertismentsQuery ] = useLazyGetAdvertismentsQuery()
-  
+
   const handlePageChange = (page: number | null) => {
     if (page === null) {
       return;
@@ -28,6 +29,7 @@ function AdvertismentsList({ perPage, page, setPage }: Props) {
   return (
     isSuccess ? <div> <div className="flex flex-wrap gap-3 justify-center pb-10">
       {data.data.map(advertisment => (
+        <Link to={`advertisments/${advertisment.id}`}>
           <Card key={advertisment.id}>
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
               <h4 className="font-bold text-large">{advertisment.name}</h4>
@@ -45,6 +47,7 @@ function AdvertismentsList({ perPage, page, setPage }: Props) {
               /> : <div className="w-[270px] h-[270px] flex items-center justify-center">Нет картинки</div>}
             </CardBody>
           </Card>
+        </Link>
       ))}
     </div>
       <div className="flex items-center justify-center">
