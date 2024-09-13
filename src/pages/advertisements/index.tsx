@@ -8,12 +8,13 @@ function Advertisments() {
 
   return (
     <>
-      <Controls perPage={perPage} setPerPage={setPerPage} page={page} setPage={setPage} />
-      <AdvertismentsList
+      <Controls
         perPage={perPage}
+        setPerPage={setPerPage}
         page={page}
         setPage={setPage}
       />
+      <AdvertismentsList perPage={perPage} page={page} setPage={setPage} />
     </>
   );
 }

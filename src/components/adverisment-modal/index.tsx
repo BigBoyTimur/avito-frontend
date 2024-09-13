@@ -9,7 +9,13 @@ import {
   Textarea,
 } from "@nextui-org/react";
 import React, { useState } from "react";
-import { useAddAdvertismentMutation, useLazyGetAdvertismentByIdQuery, useUpdateAdvertismentMutation } from "../../app/services/advertisementsApi";
+import {
+  useAddAdvertismentMutation,
+  useLazyGetAdvertismentByIdQuery,
+  useLazyGetAdvertismentsQuery,
+  useUpdateAdvertismentMutation,
+} from "../../app/services/advertisementsApi";
+import ErrorMessage from "../error-message";
 
 type Props = {
   isOpen: boolean;
@@ -19,7 +25,7 @@ type Props = {
   imageUrl?: string;
   price?: number;
   description?: string;
-  id?: string
+  id?: string;
 };
 
 function AdvertismentModal({
@@ -30,11 +36,15 @@ function AdvertismentModal({
   imageUrl,
   price,
   description,
-  id
+  id,
 }: Props) {
-  const [addAdvertisment, { isLoading: isAddAdvLoading }] = useAddAdvertismentMutation();
-  const [updateAdvertisment, { isLoading: isUpdateAdLoading }] = useUpdateAdvertismentMutation();
-  const [triggerGetAdvertismentByIdQuery] = useLazyGetAdvertismentByIdQuery()
+  const [addAdvertisment, { isLoading: isAddAdvLoading, error: addError }] =
+    useAddAdvertismentMutation();
+  const [
+    updateAdvertisment,
+    { isLoading: isUpdateAdLoading, error: updateError },
+  ] = useUpdateAdvertismentMutation();
+  const [triggerGetAdvertismentByIdQuery] = useLazyGetAdvertismentByIdQuery();
 
   const [formData, setFormData] = useState({
     name: name || "",
@@ -56,21 +66,20 @@ function AdvertismentModal({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(type);
+
     if (type === "add") {
       await addAdvertisment(formData);
-      onClose();
-    } else if (type === 'change' && id) {
-      const updatedData = { 
+    } else if (type === "change" && id) {
+      const updatedData = {
         name: formData.name,
         imageUrl: formData.imageUrl,
         price: formData.price,
-        description: formData.description
-      }
-      await updateAdvertisment({ id: "1", updatedData })
-      triggerGetAdvertismentByIdQuery({id})
-      onClose()
+        description: formData.description,
+      };
+      await updateAdvertisment({ id: id, updatedData });
+      await triggerGetAdvertismentByIdQuery({ id });
     }
+    onClose();
   };
 
   return (
@@ -121,6 +130,9 @@ function AdvertismentModal({
             </ModalBody>
             <ModalFooter>
               <Button onPress={onClose}>Закрыть</Button>
+              {(addError || updateError) && (
+                <ErrorMessage>Возникла ошибка</ErrorMessage>
+              )}
             </ModalFooter>
           </>
         )}

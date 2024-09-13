@@ -39,6 +39,19 @@ export const OrderStatus = {
 
 export type OrderItem = Advertisment & { count: number };
 
+export type OrderStatus = keyof typeof OrderStatusMap;
+
+export const OrderStatusMap = {
+  0: "Создан",
+  1: "Оплачен",
+  2: "В доставке",
+  3: "Доставлен в пункт",
+  4: "Принят",
+  5: "Архивирован",
+  6: "Возврат"
+} as const;
+
+
 export type Order = {
   /* Уникальный идентификатор. */
   id: string;

@@ -1,60 +1,67 @@
-import { Card, CardBody, CardHeader, Image, Spinner } from "@nextui-org/react"
-import { useGetAdvertismentsQuery, useLazyGetAdvertismentsQuery } from "../../app/services/advertisementsApi"
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
-
+import {
+  useGetAdvertismentsQuery,
+  useLazyGetAdvertismentsQuery,
+} from "../../app/services/advertisementsApi";
+import AdvertismentCard from "../advertisment-card";
+import GridContainer from "../grid-container";
+import Pagination from "../pagination";
+import HorizontalCenteredSpinned from "../horizontal-centered-spinner";
+import ErrorMessage from "../error-message";
+import { useEffect } from "react";
 
 type Props = {
-  perPage: number
-  page: number
-  setPage: (page: number) => void,
-}
+  perPage: number;
+  page: number;
+  setPage: (page: number) => void;
+};
 
 function AdvertismentsList({ perPage, page, setPage }: Props) {
-  const { data, isSuccess, isError } = useGetAdvertismentsQuery({perPage: perPage, page: page})
-  const [ triggerGetAdvertismentsQuery ] = useLazyGetAdvertismentsQuery()
+  const { data, isSuccess, isError } = useGetAdvertismentsQuery({
+    perPage: perPage,
+    page: page,
+  });
+  const [triggerGetAdvertismentsQuery] = useLazyGetAdvertismentsQuery();
 
   const handlePageChange = (page: number | null) => {
     if (page === null) {
       return;
     }
-    setPage(page)
-    triggerGetAdvertismentsQuery({perPage: perPage, page: page})
-  }
+    setPage(page);
+    triggerGetAdvertismentsQuery({ perPage: perPage, page: page });
+  };
 
+  useEffect(() => { // для того, чтобы при изменении товара изменения были видны на главной странице
+    triggerGetAdvertismentsQuery({ perPage: perPage, page: page })
+  })
+  
   if (isError) {
-    return <div>Возникла ошибка</div>
+    return (
+      <div>
+        <ErrorMessage>Возникла ошибка</ErrorMessage>
+      </div>
+    );
   }
 
-  return (
-    isSuccess ? <div className="flex flex-col items-center"> <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {data.data.map(advertisment => (
-        <Link to={`advertisments/${advertisment.id}`}>
-          <Card key={advertisment.id}>
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-              <h4 className="font-bold text-large">{advertisment.name}</h4>
-              <small className="text-default-500">{advertisment.price} ₽</small>
-              <small className="text-default-500">{advertisment.views} просмотров</small> 
-              <small className="text-default-500">{advertisment.likes} лайков</small> 
-            </CardHeader>
-            <CardBody className="overflow-visible py-2">
-              {advertisment.imageUrl ? <Image
-                alt="Card background"
-                className="object-cover rounded-xl"
-                src={advertisment.imageUrl}
-                width={270}
-                height={270}
-              /> : <div className="w-[270px] h-[270px] flex items-center justify-center">Нет картинки</div>}
-            </CardBody>
-          </Card>
-        </Link>
-      ))}
+  return isSuccess ? (
+    <div className="flex flex-col items-center">
+      <GridContainer>
+        {data.data.map((advertisment) => (
+          <AdvertismentCard
+            id={advertisment.id}
+            name={advertisment.name}
+            price={advertisment.price}
+            createdAt={advertisment.createdAt}
+            views={advertisment.views}
+            likes={advertisment.likes}
+            imageUrl={advertisment.imageUrl}
+          />
+        ))}
+      </GridContainer>
+      <Pagination data={data} handlePageChange={handlePageChange} page={page} />
     </div>
-      <div className="flex items-center justify-center">
-        <FaAngleLeft className={`${data.prev ? 'fill-blue-400 cursor-pointer' : 'fill-gray-700'}`} onClick={() => handlePageChange(data.prev)}/><span>{page}</span><FaAngleRight className={`${data.next ? 'fill-blue-400 cursor-pointer' : 'fill-gray-700'}` } onClick={() => handlePageChange(data.next)} />
-      </div>
-    </div> : <div className="flex justify-center"><Spinner /></div>
-  )
+  ) : (
+    <HorizontalCenteredSpinned />
+  );
 }
 
-export default AdvertismentsList
+export default AdvertismentsList;

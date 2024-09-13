@@ -7,7 +7,10 @@ export const advertismentsApi = api.injectEndpoints({
       query: ({ perPage, page }) => ({
         url: '/advertisements',
         method: 'GET',
-        params: {_per_page: perPage, _page: page}
+        params: {
+          ...(perPage && { _per_page: perPage }),
+          ...(page && { _page: page })
+        }
       })
     }),
     getAdvertismentById: builder.query<Advertisment, { id: string }>({
@@ -15,6 +18,14 @@ export const advertismentsApi = api.injectEndpoints({
         url: `/advertisements/${id}`,
         method: 'GET',
       })
+    }),
+    searchAdvertisments: builder.query<AdvertismentPage, { searchTerm: string }>({
+      query: ({ searchTerm }) => ({
+        url: '/advertisements/search',
+        params: {
+          q: searchTerm,
+        },
+      }),
     }),
     addAdvertisment: builder.mutation<void, Omit<Advertisment, 'id'>>({
       query: (newAdvertisment) => ({
@@ -39,7 +50,9 @@ export const {
   useAddAdvertismentMutation,
   useGetAdvertismentByIdQuery,
   useLazyGetAdvertismentByIdQuery,
-  useUpdateAdvertismentMutation
+  useUpdateAdvertismentMutation,
+  useSearchAdvertismentsQuery,
+  useLazySearchAdvertismentsQuery
 } = advertismentsApi
 
 export const {
