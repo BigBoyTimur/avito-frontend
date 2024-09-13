@@ -12,7 +12,6 @@ import React, { useState } from "react";
 import {
   useAddAdvertismentMutation,
   useLazyGetAdvertismentByIdQuery,
-  useLazyGetAdvertismentsQuery,
   useUpdateAdvertismentMutation,
 } from "../../app/services/advertisementsApi";
 import ErrorMessage from "../error-message";

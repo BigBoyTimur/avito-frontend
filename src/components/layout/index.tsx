@@ -1,16 +1,15 @@
-import Navbar from "../navbar"
-import { Outlet } from "react-router-dom"
+import Navbar from "../navbar";
+import { Outlet } from "react-router-dom";
 
 function Layout() {
-  
   return (
     <>
       <Navbar></Navbar>
       <div className="px-10">
-        <Outlet/>
+        <Outlet />
       </div>
     </>
-  )
+  );
 }
 
-export default Layout
+export default Layout;

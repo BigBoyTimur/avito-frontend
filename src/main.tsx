@@ -36,7 +36,7 @@ createRoot(document.getElementById("root")!).render(
     <NextUIProvider>
       <Provider store={store}>
         <main className="dark text-foreground bg-background min-h-screen">
-          <RouterProvider router={router} />        
+          <RouterProvider router={router} />
         </main>
       </Provider>
     </NextUIProvider>

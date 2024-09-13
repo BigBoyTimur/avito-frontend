@@ -24,8 +24,8 @@ export type AdvertismentPage = {
   last: number | null;
   pages: number | null;
   items: number | null;
-  data: Advertisment[]
-}
+  data: Advertisment[];
+};
 
 export const OrderStatus = {
   Created: 0,
@@ -48,9 +48,8 @@ export const OrderStatusMap = {
   3: "Доставлен в пункт",
   4: "Принят",
   5: "Архивирован",
-  6: "Возврат"
+  6: "Возврат",
 } as const;
-
 
 export type Order = {
   /* Уникальный идентификатор. */

@@ -11,18 +11,27 @@ import {
 } from "@nextui-org/react";
 import { IoMdArrowBack } from "react-icons/io";
 import AdvertismentModal from "../../components/adverisment-modal";
+import ErrorMessage from "../../components/error-message";
+import { convertIsoStringToDisplayDate } from "../../helpers/convertIsoStringToDisplayDate";
 
 function Advertisment() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-
   const {
     data: advertisment,
     isSuccess,
-    error,
+    isError,
   } = useGetAdvertismentByIdQuery({ id: id || "" });
+
+  if (isError) {
+    return (
+      <div>
+        <ErrorMessage>Возникла ошибка</ErrorMessage>
+      </div>
+    );
+  }
 
   return isSuccess && advertisment ? (
     <div className="flex pt-20 justify-center items-center">
@@ -50,13 +59,7 @@ function Advertisment() {
           </small>
           <small className="text-default-500 text-xl">
             Дата создания:{" "}
-            {new Date(advertisment.createdAt).toLocaleString("ru-RU", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            {convertIsoStringToDisplayDate(advertisment.createdAt)}
           </small>
         </CardHeader>
         <CardBody className="flex items-center overflow-visible">

@@ -30,10 +30,11 @@ function AdvertismentsList({ perPage, page, setPage }: Props) {
     triggerGetAdvertismentsQuery({ perPage: perPage, page: page });
   };
 
-  useEffect(() => { // для того, чтобы при изменении товара изменения были видны на главной странице
-    triggerGetAdvertismentsQuery({ perPage: perPage, page: page })
-  })
-  
+  useEffect(() => {
+    // для того, чтобы при изменении товара изменения были видны на главной странице
+    triggerGetAdvertismentsQuery({ perPage: perPage, page: page });
+  });
+
   if (isError) {
     return (
       <div>

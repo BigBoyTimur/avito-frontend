@@ -12,6 +12,8 @@ import OrdersFilters from "../../components/orders-filters";
 import { useEffect, useState } from "react";
 import HorizontalCenteredSpinned from "../../components/horizontal-centered-spinner";
 import { Order } from "../../app/types";
+import ErrorMessage from "../../components/error-message";
+import { convertIsoStringToDisplayDate } from "../../helpers/convertIsoStringToDisplayDate";
 function Orders() {
   const { data, isSuccess, isError } = useGetOrdersQuery();
   const [orders, setOrders] = useState(data);
@@ -21,7 +23,11 @@ function Orders() {
   }, [data]);
 
   if (isError) {
-    return null;
+    return (
+      <div>
+        <ErrorMessage>Возникла ошибка</ErrorMessage>
+      </div>
+    );
   }
 
   return isSuccess ? (
@@ -44,9 +50,9 @@ function Orders() {
             </CardHeader>
             <CardBody className="overflow-visible py-2">
               <p>Кол-во товартов: {order.items.length}</p>
-              <p>{order.finishedAt && `Заказ завершен: ${order.finishedAt}`}</p>
+              <p>{order.finishedAt && `Заказ завершен: ${convertIsoStringToDisplayDate(order.finishedAt)}`}</p>
               <p>Цена заказа: {order.orderPrice}</p>
-              <p>Дата создания заказа: {order.createdAt}</p>
+              <p>Дата создания заказа: {convertIsoStringToDisplayDate(order.createdAt)}</p>
               <p>Статус заказа: {order.status}</p>
               <Accordion variant="splitted">
                 <AccordionItem key={order.id} title="Показать все товары">

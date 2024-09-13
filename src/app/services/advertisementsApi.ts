@@ -3,46 +3,55 @@ import { api } from "./api";
 
 export const advertismentsApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getAdvertisments: builder.query<AdvertismentPage, { perPage?: number, page?: number }>({
+    getAdvertisments: builder.query<
+      AdvertismentPage,
+      { perPage?: number; page?: number }
+    >({
       query: ({ perPage, page }) => ({
-        url: '/advertisements',
-        method: 'GET',
+        url: "/advertisements",
+        method: "GET",
         params: {
           ...(perPage && { _per_page: perPage }),
-          ...(page && { _page: page })
-        }
-      })
+          ...(page && { _page: page }),
+        },
+      }),
     }),
     getAdvertismentById: builder.query<Advertisment, { id: string }>({
       query: ({ id }) => ({
         url: `/advertisements/${id}`,
-        method: 'GET',
-      })
+        method: "GET",
+      }),
     }),
-    searchAdvertisments: builder.query<AdvertismentPage, { searchTerm: string }>({
+    searchAdvertisments: builder.query<
+      AdvertismentPage,
+      { searchTerm: string }
+    >({
       query: ({ searchTerm }) => ({
-        url: '/advertisements/search',
+        url: "/advertisements/search",
         params: {
           q: searchTerm,
         },
       }),
     }),
-    addAdvertisment: builder.mutation<void, Omit<Advertisment, 'id'>>({
+    addAdvertisment: builder.mutation<void, Omit<Advertisment, "id">>({
       query: (newAdvertisment) => ({
-        url: '/advertisements',
-        method: 'POST',
+        url: "/advertisements",
+        method: "POST",
         body: newAdvertisment,
-      })
+      }),
     }),
-    updateAdvertisment: builder.mutation<void, { id: string; updatedData: Partial<Advertisment> }>({
+    updateAdvertisment: builder.mutation<
+      void,
+      { id: string; updatedData: Partial<Advertisment> }
+    >({
       query: ({ id, updatedData }) => ({
         url: `/advertisements/${id}`,
-        method: 'PATCH',
+        method: "PATCH",
         body: updatedData,
-      })
+      }),
     }),
-  })
-})
+  }),
+});
 
 export const {
   useGetAdvertismentsQuery,
@@ -52,9 +61,14 @@ export const {
   useLazyGetAdvertismentByIdQuery,
   useUpdateAdvertismentMutation,
   useSearchAdvertismentsQuery,
-  useLazySearchAdvertismentsQuery
-} = advertismentsApi
+  useLazySearchAdvertismentsQuery,
+} = advertismentsApi;
 
 export const {
-  endpoints: {getAdvertisments, addAdvertisment, getAdvertismentById, updateAdvertisment}
-} = advertismentsApi
+  endpoints: {
+    getAdvertisments,
+    addAdvertisment,
+    getAdvertismentById,
+    updateAdvertisment,
+  },
+} = advertismentsApi;

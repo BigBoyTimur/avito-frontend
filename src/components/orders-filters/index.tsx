@@ -22,11 +22,10 @@ function OrdersFilters({ data, setOrders, orders }: Props) {
   };
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    if (event.target.value === 'По возрастанию') {
-      setOrders([...orders].sort((a, b) => a.orderPrice - b.orderPrice))
-    }
-    else if (event.target.value === 'По убыванию') {
-      setOrders([...orders].sort((a, b) => b.orderPrice - a.orderPrice))
+    if (event.target.value === "По возрастанию") {
+      setOrders([...orders].sort((a, b) => a.orderPrice - b.orderPrice));
+    } else if (event.target.value === "По убыванию") {
+      setOrders([...orders].sort((a, b) => b.orderPrice - a.orderPrice));
     }
   };
 
@@ -61,10 +60,7 @@ function OrdersFilters({ data, setOrders, orders }: Props) {
           </SelectItem>
         </Select>
 
-        <Select
-          label="Сортировка по сумме заказа"
-          onChange={handleSortChange}
-        >
+        <Select label="Сортировка по сумме заказа" onChange={handleSortChange}>
           <SelectItem key={"По возрастанию"} value={"По возрастанию"}>
             По возрастанию
           </SelectItem>
