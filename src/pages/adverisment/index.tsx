@@ -1,9 +1,22 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetAdvertismentByIdQuery } from "../../app/services/advertisementsApi";
-import { Card, CardBody, CardHeader, Image, Spinner } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Image,
+  Spinner,
+  useDisclosure,
+} from "@nextui-org/react";
+import { IoMdArrowBack } from "react-icons/io";
+import AdvertismentModal from "../../components/adverisment-modal";
 
 function Advertisment() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
 
   const {
     data: advertisment,
@@ -12,21 +25,30 @@ function Advertisment() {
   } = useGetAdvertismentByIdQuery({ id: id || "" });
 
   return isSuccess && advertisment ? (
-    <div className="flex justify-center">
-      <Card key={id} className="w-[300px]">
+    <div className="flex pt-20 justify-center items-center">
+      <Card key={id} className="w-[800px] h-min">
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-          <h4 className="font-bold text-large">{advertisment.name}</h4>
-          <small className="text-default-500">{advertisment.price} ₽</small>
-          <small className="text-default-500">
+          <div className="py-4 w-full flex justify-between items-center">
+            <IoMdArrowBack
+              onClick={() => navigate(-1)}
+              className="cursor-pointer hover:fill-blue-400"
+            />
+            <Button onClick={() => onOpen()}>Изменить</Button>
+          </div>
+          <h4 className="font-bold text-3xl mb-5">{advertisment.name}</h4>
+          <small className="text-default-500 text-xl">
+            {advertisment.price} ₽
+          </small>
+          <small className="text-default-500 text-xl">
             {advertisment.views} просмотров
           </small>
-          <small className="text-default-500">
+          <small className="text-default-500 text-xl">
             {advertisment.likes} лайков
           </small>
-          <small className="text-default-500">
+          <small className="text-default-500 text-xl">
             {advertisment.likes} лайков
           </small>
-          <small className="text-default-500">
+          <small className="text-default-500 text-xl">
             Дата создания:{" "}
             {new Date(advertisment.createdAt).toLocaleString("ru-RU", {
               year: "numeric",
@@ -37,7 +59,7 @@ function Advertisment() {
             })}
           </small>
         </CardHeader>
-        <CardBody className="overflow-visible py-2">
+        <CardBody className="flex items-center overflow-visible">
           {advertisment.imageUrl ? (
             <Image
               alt="Card background"
@@ -50,6 +72,16 @@ function Advertisment() {
           <p className="mt-2">{advertisment.description}</p>
         </CardBody>
       </Card>
+      <AdvertismentModal
+        isOpen={isOpen}
+        onClose={onClose}
+        type="change"
+        name={advertisment.name}
+        imageUrl={advertisment.imageUrl}
+        price={advertisment.price}
+        description={advertisment.description}
+        id={id}
+      />
     </div>
   ) : (
     <div className="flex justify-center">

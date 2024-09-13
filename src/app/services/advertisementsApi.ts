@@ -22,7 +22,14 @@ export const advertismentsApi = api.injectEndpoints({
         method: 'POST',
         body: newAdvertisment,
       })
-    })
+    }),
+    updateAdvertisment: builder.mutation<void, { id: string; updatedData: Partial<Advertisment> }>({
+      query: ({ id, updatedData }) => ({
+        url: `/advertisements/${id}`,
+        method: 'PATCH',
+        body: updatedData,
+      })
+    }),
   })
 })
 
@@ -31,9 +38,10 @@ export const {
   useLazyGetAdvertismentsQuery,
   useAddAdvertismentMutation,
   useGetAdvertismentByIdQuery,
-  useLazyGetAdvertismentByIdQuery
+  useLazyGetAdvertismentByIdQuery,
+  useUpdateAdvertismentMutation
 } = advertismentsApi
 
 export const {
-  endpoints: {getAdvertisments, addAdvertisment, getAdvertismentById}
+  endpoints: {getAdvertisments, addAdvertisment, getAdvertismentById, updateAdvertisment}
 } = advertismentsApi

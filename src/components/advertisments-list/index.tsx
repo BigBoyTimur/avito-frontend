@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 type Props = {
   perPage: number
   page: number
-  setPage: (page: number) => void
+  setPage: (page: number) => void,
 }
 
 function AdvertismentsList({ perPage, page, setPage }: Props) {
@@ -27,7 +27,7 @@ function AdvertismentsList({ perPage, page, setPage }: Props) {
   }
 
   return (
-    isSuccess ? <div className="flex flex-col items-center"> <div className="grid grid-cols-3 gap-8">
+    isSuccess ? <div className="flex flex-col items-center"> <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       {data.data.map(advertisment => (
         <Link to={`advertisments/${advertisment.id}`}>
           <Card key={advertisment.id}>

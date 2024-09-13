@@ -6,26 +6,44 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Textarea,
 } from "@nextui-org/react";
 import React, { useState } from "react";
-import { useAddAdvertismentMutation } from "../../app/services/advertisementsApi";
+import { useAddAdvertismentMutation, useLazyGetAdvertismentByIdQuery, useUpdateAdvertismentMutation } from "../../app/services/advertisementsApi";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  type: "add" | "change";
+  name?: string;
+  imageUrl?: string;
+  price?: number;
+  description?: string;
+  id?: string
 };
 
-function AdvertismentModal({ isOpen, onClose }: Props) {
-  const [addAdvertisment, { isLoading } ] = useAddAdvertismentMutation()
+function AdvertismentModal({
+  isOpen,
+  onClose,
+  type,
+  name,
+  imageUrl,
+  price,
+  description,
+  id
+}: Props) {
+  const [addAdvertisment, { isLoading: isAddAdvLoading }] = useAddAdvertismentMutation();
+  const [updateAdvertisment, { isLoading: isUpdateAdLoading }] = useUpdateAdvertismentMutation();
+  const [triggerGetAdvertismentByIdQuery] = useLazyGetAdvertismentByIdQuery()
 
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: 1,
-    createdAt: (new Date()).toISOString(),
+    name: name || "",
+    description: description || "",
+    price: price || 1,
+    createdAt: new Date().toISOString(),
     views: 0,
     likes: 0,
-    imageUrl: "",
+    imageUrl: imageUrl || "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,9 +55,22 @@ function AdvertismentModal({ isOpen, onClose }: Props) {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    await addAdvertisment(formData)
-    onClose()
+    e.preventDefault();
+    console.log(type);
+    if (type === "add") {
+      await addAdvertisment(formData);
+      onClose();
+    } else if (type === 'change' && id) {
+      const updatedData = { 
+        name: formData.name,
+        imageUrl: formData.imageUrl,
+        price: formData.price,
+        description: formData.description
+      }
+      await updateAdvertisment({ id: "1", updatedData })
+      triggerGetAdvertismentByIdQuery({id})
+      onClose()
+    }
   };
 
   return (
@@ -57,7 +88,7 @@ function AdvertismentModal({ isOpen, onClose }: Props) {
                   onChange={handleChange}
                   required
                 />
-                <Input
+                <Textarea
                   placeholder="Описание товара"
                   name="description"
                   value={formData.description}
@@ -68,7 +99,7 @@ function AdvertismentModal({ isOpen, onClose }: Props) {
                   type="number"
                   placeholder="Цена"
                   name="price"
-                  value={'' + formData.price}
+                  value={"" + formData.price}
                   onChange={handleChange}
                   required
                 />
@@ -78,20 +109,18 @@ function AdvertismentModal({ isOpen, onClose }: Props) {
                   value={formData.imageUrl}
                   onChange={handleChange}
                 />
-                <Button 
+                <Button
                   type="submit"
                   fullWidth
-                  isLoading={isLoading}
+                  isLoading={isAddAdvLoading || isUpdateAdLoading}
                   color="primary"
                 >
-                  Добавить товар
+                  {type === "add" ? "Добавить товар" : "Изменить товар"}
                 </Button>
               </form>
             </ModalBody>
             <ModalFooter>
-              <Button onPress={onClose}>
-                Закрыть
-              </Button>
+              <Button onPress={onClose}>Закрыть</Button>
             </ModalFooter>
           </>
         )}

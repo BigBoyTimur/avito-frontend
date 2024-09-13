@@ -5,17 +5,19 @@ import AdvertismentModal from '../adverisment-modal'
 
 type Props = {
   perPage: number
-  setLimit: (limit: number) => void
+  setPerPage: (limit: number) => void
   page: number
+  setPage: (page: number) => void
 }
 
 
-function Controls({ perPage, setLimit, page }: Props) {
+function Controls({ perPage, setPerPage, page, setPage }: Props) {
   const [triggerGetAdvertismentsQuery] = useLazyGetAdvertismentsQuery()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>	) => {
-    setLimit(Number(event.target.value))
+    setPerPage(Number(event.target.value))
+    setPage(1)
     triggerGetAdvertismentsQuery({perPage: Number(event.target.value), page})
   }
 
@@ -57,7 +59,7 @@ function Controls({ perPage, setLimit, page }: Props) {
           Добавить объявления
         </Button>
       </div>
-      <AdvertismentModal isOpen={isOpen} onClose={handleClose} />
+      <AdvertismentModal type='add' isOpen={isOpen} onClose={handleClose} />
     </>
   )
 }
