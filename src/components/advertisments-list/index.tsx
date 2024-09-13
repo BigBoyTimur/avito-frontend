@@ -27,7 +27,7 @@ function AdvertismentsList({ perPage, page, setPage }: Props) {
   }
 
   return (
-    isSuccess ? <div> <div className="flex flex-wrap gap-3 justify-center pb-10">
+    isSuccess ? <div className="flex flex-col items-center"> <div className="grid grid-cols-3 gap-8">
       {data.data.map(advertisment => (
         <Link to={`advertisments/${advertisment.id}`}>
           <Card key={advertisment.id}>
